@@ -43,7 +43,7 @@ namespace VRS.WebSite.Controllers
         public ActionResult Create()
         {
             ViewBag.ClientId = new SelectList(db.Client, "Id", "Name");
-            ViewBag.VehicleId = new SelectList(db.Vehicle, "Id", "Description");
+            ViewBag.VehicleId = new SelectList(db.Vehicle.Where(v => !v.InUse), "Id", "Description");
             return View();
         }
         
@@ -80,8 +80,11 @@ namespace VRS.WebSite.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Rent.Add(rent);
-                db.SaveChanges();
+                var crearedRent = controller.CreateRent(rent, SessionPersister.Client);
+                if (crearedRent == null)
+                {
+                    return View("error");
+                }
                 return RedirectToAction("Index");
             }
 

@@ -18,12 +18,13 @@ namespace VRS.WebApi.Controllers
 {
     public class UsersController : ApiController
     {
-        private IRepository<User> repo = Repository<User>.GetInstance();
+        private IRepository<User> repo;
         Logic.Controller.LoginController controller = new Logic.Controller.LoginController();
 
         // GET: api/Users
         public IQueryable<User> GetUser()
         {
+            repo = Repository<User>.GetInstance();
             return repo.GetAll();
         }
 
@@ -31,6 +32,7 @@ namespace VRS.WebApi.Controllers
         [ResponseType(typeof(User))]
         public IHttpActionResult GetUser(int id)
         {
+            repo = Repository<User>.GetInstance();
             User user = repo.GetById(id);
             if (user == null)
             {
@@ -44,7 +46,8 @@ namespace VRS.WebApi.Controllers
         [ResponseType(typeof(User))]
         public IHttpActionResult DoLogin(string login, string password)
         {
-            User user = repo.SearchFor(u => u.Login == login).First();
+            repo = Repository<User>.GetInstance();
+            User user = repo.GetItems(u => u.Login == login, u => u.Role).FirstOrDefault();
             if (user == null)
             {
                 return NotFound();
@@ -64,6 +67,7 @@ namespace VRS.WebApi.Controllers
         [ResponseType(typeof(User))]
         public IHttpActionResult PostUser(string username, string password, int roleId)
         {
+            repo = Repository<User>.GetInstance();
             User user = controller.CreateUser(username, password, roleId);
 
             repo.Insert(user);
@@ -74,6 +78,7 @@ namespace VRS.WebApi.Controllers
         [ResponseType(typeof(User))]
         public IHttpActionResult DeleteUser(int id)
         {
+            repo = Repository<User>.GetInstance();
             User user = repo.GetById(id);
             if (user == null)
             {
@@ -86,6 +91,7 @@ namespace VRS.WebApi.Controllers
 
         protected override void Dispose(bool disposing)
         {
+            repo = Repository<User>.GetInstance();
             if (disposing)
             {
                 repo.Dispose();
@@ -95,6 +101,7 @@ namespace VRS.WebApi.Controllers
 
         private bool UserExists(int id)
         {
+            repo = Repository<User>.GetInstance();
             return repo.SearchFor(e => e.Id == id).Count() > 0;
         }
     }

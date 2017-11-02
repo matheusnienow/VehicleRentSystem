@@ -20,7 +20,7 @@ namespace VRS.Logic.Controller
                 return result.AsQueryable();
             }
 
-            return repo.SearchFor(r => r.ClientId == client.Id);
+            return repo.GetItems(r => r.ClientId == client.Id, r => r.Vehicle);
         }
 
         public Rent CreateRent(Rent rent, Client client)
@@ -32,6 +32,10 @@ namespace VRS.Logic.Controller
             var result = repo.Insert(rent);
             if (result > 0)
             {
+                var vehicleRepo = Repository<Vehicle>.GetInstance();
+                var vehicle = vehicleRepo.GetById(rent.VehicleId);
+                vehicle.InUse = true;
+                var updateResult = vehicleRepo.Update(vehicle);                
                 return rent;
             }
             return null;

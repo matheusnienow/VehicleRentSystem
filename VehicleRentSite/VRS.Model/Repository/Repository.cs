@@ -76,32 +76,21 @@ namespace VRS.Model.Repository
             dbContext.Dispose();
         }
 
-        public IList<T> GetItems(Expression<Func<T, bool>> predicate, params string[] navigationProperties)
+        public IQueryable<T> GetItems(Expression<Func<T, bool>> predicate, params string[] navigationProperties)
         {
-            List<T> list;
-            {
-                var query = dbSet.AsQueryable();
+            var query = dbSet.AsQueryable();
 
-                foreach (string navigationProperty in navigationProperties)
-                    query = query.Include(navigationProperty);//got to reaffect it.
-
-                list = query.Where(predicate).ToList<T>();
-            }
-            return list;
+            foreach (string navigationProperty in navigationProperties)
+                query = query.Include(navigationProperty);//got to reaffect it.
+            return query.Where(predicate);
         }
 
-        public IList<T> GetItems(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] navigationProperties)
+        public IQueryable<T> GetItems(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] navigationProperties)
         {
-            List<T> list;
-            {
-                var query = dbSet.AsQueryable();
-
-                foreach (var navigationProperty in navigationProperties)
-                    query = query.Include(navigationProperty);
-
-                list = query.Where(predicate).ToList<T>();
-            }
-            return list;
+            var query = dbSet.AsQueryable();
+            foreach (var navigationProperty in navigationProperties)
+                query = query.Include(navigationProperty);
+            return query.Where(predicate);
         }
 
         public IQueryable<T> GetAll(params Expression<Func<T, object>>[] navigationProperties)

@@ -20,9 +20,9 @@ namespace VRS.Model.Repository
         IQueryable<T> GetAll(params Expression<Func<T, object>>[] navigationProperties);        
         T GetById(int id);
         void Dispose();
-        
-        IList<T> GetItems(Expression<Func<T, bool>> predicate, params string[] navigationProperties);
-        IList<T> GetItems(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] navigationProperties);
+
+        IQueryable<T> GetItems(Expression<Func<T, bool>> predicate, params string[] navigationProperties);
+        IQueryable<T> GetItems(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] navigationProperties);
         IQueryable<T> Include(Expression<Func<T, object>> predicate);
     }
 }

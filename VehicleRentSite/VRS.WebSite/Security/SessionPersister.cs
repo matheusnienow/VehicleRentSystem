@@ -26,7 +26,13 @@ namespace VRS.WebSite.Security
             {
                 HttpContext.Current.Session[usernameSessionvar] = value;
                 User = Repository<User>.GetInstance().SearchFor(u => u.Login == value).FirstOrDefault();
-                Client = Repository<Client>.GetInstance().SearchFor(u => u.UserId == User.Id).FirstOrDefault();
+                if (User == null)
+                {
+                    Client = null;
+                } else
+                {
+                    Client = Repository<Client>.GetInstance().SearchFor(u => u.UserId == User.Id).FirstOrDefault();
+                }
             }
         }
     }

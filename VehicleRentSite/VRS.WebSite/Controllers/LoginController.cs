@@ -5,7 +5,6 @@ using System.Web;
 using System.Web.Mvc;
 using VRS.Model;
 using VRS.WebSite.Models;
-using VRS.ApiHelper;
 using VRS.Model.Repository;
 using VRS.WebSite.App_Start;
 using Microsoft.AspNet.Identity;
