@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<ArrayOfVehicleModelDTO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<VehicleModelDTO>
+		<Id>0</Id>
+		<Description>Model S</Description>
+		<Year>2017</Year>
+		<BrandId>5</BrandId>
+		<VehicleTypeId>8</VehicleTypeId>
+		<GasTypeId>4</GasTypeId>
+	</VehicleModelDTO>
+	<VehicleModelDTO>
+		<Id>0</Id>
+		<Description>Model S</Description>
+		<Year>2017</Year>
+		<BrandId>5</BrandId>
+		<VehicleTypeId>8</VehicleTypeId>
+		<GasTypeId>4</GasTypeId>
+	</VehicleModelDTO>
+	<VehicleModelDTO>
+		<Id>0</Id>
+		<Description>Model S</Description>
+		<Year>2017</Year>
+		<BrandId>5</BrandId>
+		<VehicleTypeId>8</VehicleTypeId>
+		<GasTypeId>4</GasTypeId>
+	</VehicleModelDTO>
+</ArrayOfVehicleModelDTO>
