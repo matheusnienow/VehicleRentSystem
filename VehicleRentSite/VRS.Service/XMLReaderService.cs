@@ -20,6 +20,8 @@ namespace VRS.Service
 {
     public partial class XMLReaderService : ServiceBase
     {
+        private System.Timers.Timer timer;
+
         DateTime lastRun = DateTime.MinValue;
         string filePath = "C:\\Users\\Matheus N. Nienow\\Desktop\\VehicleModelSource.xml";
 
@@ -30,20 +32,21 @@ namespace VRS.Service
 
         protected override void OnStart(string[] args)
         {
+            this.timer = new System.Timers.Timer(30000D);  // 30000 milliseconds = 30 seconds
+            this.timer.AutoReset = true;
+            this.timer.Elapsed += new System.Timers.ElapsedEventHandler(Timer_Elapsed);
+            this.timer.Start();
+        }
+
+        private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
             Execute();
-            while (true)
-            {
-                if (DateTime.Now.Subtract(lastRun).Seconds > 30)
-                {
-                    Execute();
-                }
-                Thread.Sleep(1000);
-            }
         }
 
         protected override void OnStop()
         {
-            //_timer = null;
+            this.timer.Stop();
+            this.timer = null;
         }
 
         void Execute()
