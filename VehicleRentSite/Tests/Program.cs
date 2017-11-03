@@ -16,18 +16,26 @@ namespace Tests
 {
     class Program
     {
+        static DateTime lastRun = DateTime.MinValue;
+
+        static string filePath = "C:\\Users\\Matheus N. Nienow\\Desktop\\VehicleModelSource.xml";
         static void Main(string[] args)
         {
+            Execute();
+
             while (true)
             {
-                Execute();
-                Thread.Sleep(10000);
-            }         
+                if (DateTime.Now.Subtract(lastRun).Seconds > 30)
+                {
+                    Execute();
+                }
+                Thread.Sleep(1000);
+            }
         }
 
-        private static void Execute()
+        static void Execute()
         {
-            string filePath = "C:\\Users\\Matheus N. Nienow\\Desktop\\VehicleModelSource.xml";
+            lastRun = DateTime.Now;
             var modelList = GetListFromFile(filePath);
             if (modelList.Count == 0)
             {
@@ -39,9 +47,6 @@ namespace Tests
             {
                 ClearFile(filePath);
             }
-
-            Console.Write(modelList);
-            Console.ReadKey();
         }
 
         private static int InsertInfo(List<VehicleModel> list)
@@ -50,7 +55,7 @@ namespace Tests
             return repository.Insert(list);
         }
 
-        private static void ClearFile(string file) 
+        private static void ClearFile(string file)
         {
             var emptyArray = new List<VehicleModelDTO>();
             var emptyContent = SerializeHelper.Serialize(emptyArray);
@@ -60,12 +65,25 @@ namespace Tests
         private static List<VehicleModel> GetListFromFile(string fileName)
         {
             var dtos = ReadXmlFile(fileName);
+            if (dtos.Length == 0)
+            {
+                return new List<VehicleModel>();
+            }
             return ConvertDtoToModel(dtos);
         }
 
         private static VehicleModelDTO[] ReadXmlFile(string fileName)
         {
+            if (string.IsNullOrEmpty(fileName))
+            {
+                return null;
+            }
+
             string xml = File.ReadAllText(fileName);
+            if (string.IsNullOrEmpty(xml))
+            {
+                return new VehicleModelDTO[] { };
+            }
             return SerializeHelper.Deserialize<VehicleModelDTO[]>(xml);
         }
 
@@ -77,6 +95,25 @@ namespace Tests
                 dtos.ToList().ForEach(m => result.Add(m.ToModel()));
             }
             return result;
+        }
+
+        public class PeriodicTask
+        {
+            public static async Task Run(Action action, TimeSpan period, CancellationToken cancellationToken)
+            {
+                while (!cancellationToken.IsCancellationRequested)
+                {
+                    await Task.Delay(period, cancellationToken);
+
+                    if (!cancellationToken.IsCancellationRequested)
+                        action();
+                }
+            }
+
+            public static Task Run(Action action, TimeSpan period)
+            {
+                return Run(action, period, CancellationToken.None);
+            }
         }
     }
 }

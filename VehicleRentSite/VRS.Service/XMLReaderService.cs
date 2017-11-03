@@ -20,11 +20,8 @@ namespace VRS.Service
 {
     public partial class XMLReaderService : ServiceBase
     {
+        DateTime lastRun = DateTime.MinValue;
         string filePath = "C:\\Users\\Matheus N. Nienow\\Desktop\\VehicleModelSource.xml";
-        private int interval = 60;
-
-        private bool execute = true;
-        private const int SECONDS = 1000;
 
         public XMLReaderService()
         {
@@ -33,20 +30,25 @@ namespace VRS.Service
 
         protected override void OnStart(string[] args)
         {
-            while (execute)
+            Execute();
+            while (true)
             {
-                Execute();
-                Thread.Sleep(interval * SECONDS);
+                if (DateTime.Now.Subtract(lastRun).Seconds > 30)
+                {
+                    Execute();
+                }
+                Thread.Sleep(1000);
             }
         }
 
         protected override void OnStop()
         {
-            execute = false;
+            //_timer = null;
         }
 
         void Execute()
         {
+            lastRun = DateTime.Now;
             var modelList = GetListFromFile(filePath);
             if (modelList.Count == 0)
             {
@@ -76,12 +78,25 @@ namespace VRS.Service
         private static List<VehicleModel> GetListFromFile(string fileName)
         {
             var dtos = ReadXmlFile(fileName);
+            if (dtos.Length == 0)
+            {
+                return new List<VehicleModel>();
+            }
             return ConvertDtoToModel(dtos);
         }
 
         private static VehicleModelDTO[] ReadXmlFile(string fileName)
         {
+            if (string.IsNullOrEmpty(fileName))
+            {
+                return null;
+            }
+
             string xml = File.ReadAllText(fileName);
+            if (string.IsNullOrEmpty(xml))
+            {
+                return new VehicleModelDTO[] { };
+            }
             return SerializeHelper.Deserialize<VehicleModelDTO[]>(xml);
         }
 
