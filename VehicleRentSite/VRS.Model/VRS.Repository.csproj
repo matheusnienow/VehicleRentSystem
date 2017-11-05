@@ -51,6 +51,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DTO\ClientDTO.cs" />
+    <Compile Include="DTO\RentDTO.cs" />
+    <Compile Include="DTO\RoleDto.cs" />
+    <Compile Include="DTO\UserDTO.cs" />
+    <Compile Include="DTO\VehicleDTO.cs" />
     <Compile Include="DTO\VehicleModelDTO.cs" />
     <Compile Include="Model\Brand.cs" />
     <Compile Include="Model\Client.cs" />

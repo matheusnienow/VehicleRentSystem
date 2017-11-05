@@ -10,7 +10,7 @@ namespace VRS.Logic.Controller
 {
     public class ClientController
     {
-        IRepository<Client> repo = Repository<Client>.GetInstance();
+        IRepository<Client> repo = Repository<Client>.NewInstance();
 
         public Client CreateClient(string name, string surname, char sex, string phone, string city, DateTime birthDate, int userId)
         {

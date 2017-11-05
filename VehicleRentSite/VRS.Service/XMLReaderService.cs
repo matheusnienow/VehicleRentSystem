@@ -15,32 +15,48 @@ using VRS.Model;
 using VRS.Model.DTO;
 using VRS.Model.Repository;
 using System.Configuration;
+using System.ComponentModel;
+using System.Diagnostics;
 
 namespace VRS.Service
 {
     public partial class XMLReaderService : ServiceBase
     {
         private System.Timers.Timer timer;
-
-        DateTime lastRun = DateTime.MinValue;
-        string filePath = "C:\\Users\\Matheus N. Nienow\\Desktop\\VehicleModelSource.xml";
+        private DateTime lastRun;
+        static string filePath = @"C:\temp\VehicleModelSource.xml";
 
         public XMLReaderService()
         {
             InitializeComponent();
+
+            this.ServiceName = "VRS.Service";
+            this.CanStop = true;
+            this.CanPauseAndContinue = true;
+            this.AutoLog = false;
+            ((ISupportInitialize)this.EventLog).BeginInit();
+            if (!EventLog.SourceExists(this.ServiceName))
+            {
+                EventLog.CreateEventSource(this.ServiceName, "Application");
+            }
+            ((ISupportInitialize)this.EventLog).EndInit();
+            this.EventLog.Source = this.ServiceName;
+            this.EventLog.Log = "Application";
         }
 
         protected override void OnStart(string[] args)
         {
-            this.timer = new System.Timers.Timer(30000D);  // 30000 milliseconds = 30 seconds
-            this.timer.AutoReset = true;
-            this.timer.Elapsed += new System.Timers.ElapsedEventHandler(Timer_Elapsed);
-            this.timer.Start();
-        }
+            lastRun = DateTime.MinValue;
 
-        private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
-        {
             Execute();
+            while (true)
+            {
+                if (DateTime.Now.Subtract(lastRun).Seconds > 30)
+                {
+                    Execute();
+                }
+                Thread.Sleep(1000);
+            }
         }
 
         protected override void OnStop()
@@ -51,34 +67,49 @@ namespace VRS.Service
 
         void Execute()
         {
-            lastRun = DateTime.Now;
-            var modelList = GetListFromFile(filePath);
-            if (modelList.Count == 0)
+            try { 
+                lastRun = DateTime.Now;
+                var modelList = GetListFromFile(filePath);
+                if (modelList.Count == 0)
+                {
+                    return;
+                }
+
+                var result = InsertInfo(modelList);
+                if (result > 0)
+                {
+                    ClearFile(filePath);
+                }
+            } catch (Exception e)
             {
-                return;
+                this.EventLog.WriteEntry(e.Message);
             }
+        }
 
-            var result = InsertInfo(modelList);
-            if (result > 0)
+        private int InsertInfo(List<VehicleModel> list)
+        {
+            var repository = Repository<VehicleModel>.NewInstance();
+            var result = repository.Insert(list);
+            if (result == 0)
             {
-                ClearFile(filePath);
+                this.EventLog.WriteEntry("InsertInfo(): nothing was inserted from a list of "+list.Count);
+            }
+            return result;
+        }
+
+        private void ClearFile(string file)
+        {
+            try { 
+                var emptyArray = new List<VehicleModelDTO>();
+                var emptyContent = SerializeHelper.Serialize(emptyArray);
+                File.WriteAllText(file, emptyContent);
+            } catch (Exception e)
+            {
+                this.EventLog.WriteEntry("Error clearing file: " + e.Message);
             }
         }
 
-        private static int InsertInfo(List<VehicleModel> list)
-        {
-            var repository = Repository<VehicleModel>.GetInstance();
-            return repository.Insert(list);
-        }
-
-        private static void ClearFile(string file)
-        {
-            var emptyArray = new List<VehicleModelDTO>();
-            var emptyContent = SerializeHelper.Serialize(emptyArray);
-            File.WriteAllText(file, emptyContent);
-        }
-
-        private static List<VehicleModel> GetListFromFile(string fileName)
+        private List<VehicleModel> GetListFromFile(string fileName)
         {
             var dtos = ReadXmlFile(fileName);
             if (dtos.Length == 0)
@@ -88,22 +119,32 @@ namespace VRS.Service
             return ConvertDtoToModel(dtos);
         }
 
-        private static VehicleModelDTO[] ReadXmlFile(string fileName)
+        private VehicleModelDTO[] ReadXmlFile(string fileName)
         {
-            if (string.IsNullOrEmpty(fileName))
-            {
-                return null;
-            }
+            var result = new VehicleModelDTO[] { };
+            try { 
+                if (string.IsNullOrEmpty(fileName))
+                {
+                    this.EventLog.WriteEntry(string.Format("File {0} is empty or null", fileName));
+                    return result;
+                }
 
-            string xml = File.ReadAllText(fileName);
-            if (string.IsNullOrEmpty(xml))
+                string xml = File.ReadAllText(fileName);
+                if (string.IsNullOrEmpty(xml))
+                {
+                    this.EventLog.WriteEntry(string.Format("Xml {0} is empty", fileName));
+                    return result;
+                }
+
+                result = SerializeHelper.Deserialize<VehicleModelDTO[]>(xml);
+            } catch (Exception e)
             {
-                return new VehicleModelDTO[] { };
+                this.EventLog.WriteEntry(string.Format("Error reading xml file: {0}", e.Message));
             }
-            return SerializeHelper.Deserialize<VehicleModelDTO[]>(xml);
+            return result;
         }
 
-        private static List<VehicleModel> ConvertDtoToModel(VehicleModelDTO[] dtos)
+        private List<VehicleModel> ConvertDtoToModel(VehicleModelDTO[] dtos)
         {
             var result = new List<VehicleModel>();
             if (dtos.Length > 0)

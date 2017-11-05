@@ -38,10 +38,7 @@ namespace VRS.Model
                 .IsFixedLength()
                 .IsUnicode(false);
 
-            modelBuilder.Entity<Client>()
-                .HasMany(e => e.Rent)
-                .WithRequired(e => e.Client)
-                .WillCascadeOnDelete(false);
+            modelBuilder.Entity<Client>();
 
             modelBuilder.Entity<User>()
                 .Property(e => e.Salt)

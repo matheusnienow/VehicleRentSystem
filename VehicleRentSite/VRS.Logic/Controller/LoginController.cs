@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 using VRS.Logic.Util;
 using VRS.Model;
 using VRS.Model.Repository;
+using VRS.Repository.DTO;
 
 namespace VRS.Logic.Controller
 {
-    public class LoginController
+    public class UserController
     {
-        private IRepository<User> repo = Repository<User>.GetInstance();
+        private IRepository<User> repo = Repository<User>.NewInstance();
 
         public User CreateUser(string username, string password, int roleId)
         {
@@ -27,11 +28,38 @@ namespace VRS.Logic.Controller
 
             return null;
         }
-        
+
+        public IQueryable<User> GetAll()
+        {
+            return repo.GetAll();
+        }
+
         public bool VerifyUser(User user, string password)
         {
-            var passwordHashed = SecurityHelper.HashPassword(password, user.Salt);
-            return passwordHashed.SequenceEqual(user.Hash);
+            return VerifyUser(user.Salt, user.Hash, password);
+        }
+
+        public User VerifyUser(string username, string password)
+        {
+            var user = repo.SearchFor(u => u.Login == username).FirstOrDefault();
+            if (user == null)
+            {
+                return null;
+            }
+
+            var verified = VerifyUser(user.Salt, user.Hash, password);
+            if (!verified)
+            {
+                return null;
+            }
+
+            return user;
+        }
+
+        public bool VerifyUser(byte[] salt, byte[] hash, string password)
+        {
+            var passwordHashed = SecurityHelper.HashPassword(password, salt);
+            return passwordHashed.SequenceEqual(hash);
         }
     }
 }

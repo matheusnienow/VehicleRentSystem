@@ -15,7 +15,7 @@ namespace VRS.Model.Repository
         internal VRSModel dbContext;
         internal DbSet<T> dbSet;
 
-        public static Repository<T> GetInstance()
+        public static Repository<T> NewInstance()
         {
             return new Repository<T>(new VRSModel());
         }

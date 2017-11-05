@@ -5,6 +5,7 @@ namespace VRS.Model
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
+    using VRS.Repository.DTO;
 
     [Table("Client")]
     public partial class Client : BaseEntity
@@ -12,7 +13,6 @@ namespace VRS.Model
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Client()
         {
-            Rent = new HashSet<Rent>();
         }
 
         public Client(string name, string surname, string sex, string phone, string city, DateTime birthDate, int userId)
@@ -28,7 +28,6 @@ namespace VRS.Model
             Passport = "";
             CPF = 0;
             Address = "";
-            Rent = new HashSet<Rent>();
         }
 
         [Required]
@@ -65,7 +64,26 @@ namespace VRS.Model
 
         public virtual User User { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Rent> Rent { get; set; }
+        public ClientDTO ToDto()
+        {
+            var dto = new ClientDTO
+            {
+                Id = Id,
+                Name = Name,
+                Passport = Passport,
+                Phone = Phone,
+                Sex = Sex,
+                Surname = Surname,
+                UserId = UserId,
+                Address = Address,
+                BirthDate = BirthDate,
+                City = City,
+                Country = Country,
+                CPF = CPF
+            };
+
+            return dto;
+        }
+        
     }
 }

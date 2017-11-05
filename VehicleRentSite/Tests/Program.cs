@@ -18,7 +18,7 @@ namespace Tests
     {
         static DateTime lastRun = DateTime.MinValue;
 
-        static string filePath = "C:\\Users\\Matheus N. Nienow\\Desktop\\VehicleModelSource.xml";
+        static string filePath = @"C:\temp\VehicleModelSource.xml";
         static void Main(string[] args)
         {
             Execute();
@@ -51,7 +51,7 @@ namespace Tests
 
         private static int InsertInfo(List<VehicleModel> list)
         {
-            var repository = Repository<VehicleModel>.GetInstance();
+            var repository = Repository<VehicleModel>.NewInstance();
             return repository.Insert(list);
         }
 

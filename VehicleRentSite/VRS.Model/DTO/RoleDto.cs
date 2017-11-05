@@ -5,12 +5,21 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VRS.Model
+namespace VRS.Repository.DTO
 {
     [DataContract]
-    public abstract class BaseEntity
+    public class RoleDTO
     {
+        public RoleDTO(int id, string name)
+        {
+            Id = id;
+            Name = name;
+        }
+
         [DataMember]
         public int Id { get; set; }
+
+        [DataMember]
+        public string Name { get; set; }
     }
 }

@@ -18,7 +18,7 @@ namespace VRS.WebSite.Security
                     (new { controller = "Login", action = "Index" }));
             } else
             {
-                User user = Repository<User>.GetInstance().SearchFor(u => u.Login == SessionPersister.Username).FirstOrDefault();
+                User user = Repository<User>.NewInstance().SearchFor(u => u.Login == SessionPersister.Username).FirstOrDefault();
                 CustomPrincipal cp = new CustomPrincipal(user);
                 if (!cp.IsInRole(Roles))
                 {

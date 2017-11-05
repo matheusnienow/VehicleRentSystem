@@ -1,1 +1,0 @@
-﻿<%@ ServiceHost Language="C#" Debug="true" Service="VRS.WebApi.VRS" CodeBehind="VRS.svc.cs" %>

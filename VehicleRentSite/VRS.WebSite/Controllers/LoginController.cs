@@ -17,8 +17,8 @@ namespace VRS.WebSite.Controllers
 {
     public class LoginController : Controller
     {
-        private IRepository<User> repo = Repository<User>.GetInstance();
-        private VRS.Logic.Controller.LoginController controller = new Logic.Controller.LoginController();
+        private IRepository<User> repo = Repository<User>.NewInstance();
+        private VRS.Logic.Controller.UserController controller = new Logic.Controller.UserController();
 
         // GET: Login
         public ActionResult Index()
@@ -36,7 +36,7 @@ namespace VRS.WebSite.Controllers
 
             User user = repo.SearchFor(u => u.Login == userDto.Username).FirstOrDefault();
             bool verified = controller.VerifyUser(user, userDto.Password);
-            Client client = Repository<Client>.GetInstance().SearchFor(c => c.UserId == user.Id).FirstOrDefault();
+            Client client = Repository<Client>.NewInstance().SearchFor(c => c.UserId == user.Id).FirstOrDefault();
             if (verified)
             {
                 AppConfig.LogIn(user, client);

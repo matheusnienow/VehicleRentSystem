@@ -10,7 +10,7 @@ namespace VRS.Logic.Controller
 {
     public class RentController
     {
-        private IRepository<Rent> repo = Repository<Rent>.GetInstance();
+        private IRepository<Rent> repo = Repository<Rent>.NewInstance();
 
         public IQueryable<Rent> GetRentsForClient(Client client)
         {
@@ -23,6 +23,16 @@ namespace VRS.Logic.Controller
             return repo.GetItems(r => r.ClientId == client.Id, r => r.Vehicle);
         }
 
+        public List<Rent> GetAll()
+        {
+            return repo.GetAll().ToList();
+        }
+
+        public List<Rent> GetAllWithVehicleAndClient()
+        {
+            return repo.GetAll(r => r.Vehicle, r => r.Client).ToList();
+        }
+
         public Rent CreateRent(Rent rent, Client client)
         {
             var period = rent.FinishDate.Value.Subtract(rent.StartDate);
@@ -32,7 +42,7 @@ namespace VRS.Logic.Controller
             var result = repo.Insert(rent);
             if (result > 0)
             {
-                var vehicleRepo = Repository<Vehicle>.GetInstance();
+                var vehicleRepo = Repository<Vehicle>.NewInstance();
                 var vehicle = vehicleRepo.GetById(rent.VehicleId);
                 vehicle.InUse = true;
                 var updateResult = vehicleRepo.Update(vehicle);                
