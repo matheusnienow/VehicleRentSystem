@@ -11,8 +11,6 @@ namespace VRS.Repository.DTO
     [DataContract]
     public partial class RentDTO
     {
-
-
         [DataMember]
         public int Id { get; set; }
 

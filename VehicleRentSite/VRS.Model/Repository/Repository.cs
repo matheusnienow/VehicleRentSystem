@@ -81,7 +81,7 @@ namespace VRS.Model.Repository
             var query = dbSet.AsQueryable();
 
             foreach (string navigationProperty in navigationProperties)
-                query = query.Include(navigationProperty);//got to reaffect it.
+                query = query.Include(navigationProperty);
             return query.Where(predicate);
         }
 
@@ -120,11 +120,11 @@ namespace VRS.Model.Repository
             {
                 foreach (var eve in e.EntityValidationErrors)
                 {
-                    Console.WriteLine("Entidade do tipo \"{0}\" no estado \"{1}\" tem os seguintes erros de validação:",
+                    Console.WriteLine("Tntity of type \"{0}\" in the state \"{1}\" has the following validation errors:",
                         eve.Entry.Entity.GetType().Name, eve.Entry.State);
                     foreach (var ve in eve.ValidationErrors)
                     {
-                        Console.WriteLine("- Property: \"{0}\", Erro: \"{1}\"",
+                        Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
                             ve.PropertyName, ve.ErrorMessage);
                     }
                 }

@@ -61,7 +61,7 @@ namespace VRS.WebSite.Controllers
 
             VRS.Logic.Controller.ClientController clientController = new Logic.Controller.ClientController();
             
-            User createdUser = controller.CreateUser(user.Username, user.Password, 3);
+            User createdUser = controller.CreateUser(user.Username, user.Password, 2);
             Client createdClient = clientController.CreateClient(user.Name, user.Surname, user.Sex, user.Phone, user.City, user.BirthDate, createdUser.Id);
             if (createdUser != null && createdClient != null)
             {

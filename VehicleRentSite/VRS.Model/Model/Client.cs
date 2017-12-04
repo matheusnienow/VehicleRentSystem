@@ -40,7 +40,7 @@ namespace VRS.Model
         [StringLength(10)]
         public string Passport { get; set; }
 
-        public int? CPF { get; set; }
+        public int? CPF { get; set; }//BRAZILIAN DOCUMENT NUMBER
 
         [StringLength(1)]
         public string Sex { get; set; }
