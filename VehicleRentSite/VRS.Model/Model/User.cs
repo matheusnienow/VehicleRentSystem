@@ -33,7 +33,7 @@ namespace VRS.Model
 
         public UserDTO ToDto()
         {
-            return new UserDTO(Id, Login, Salt, Hash, RoleId.Value, Role.ToDto());
+            return new UserDTO(Id, Login, Salt, Hash, RoleId.Value/*, Role.ToDto()*/);
         }
 
         [Required]

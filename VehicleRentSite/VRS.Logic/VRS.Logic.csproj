@@ -43,6 +43,7 @@
     <Compile Include="Controller\ClientController.cs" />
     <Compile Include="Controller\LoginController.cs" />
     <Compile Include="Controller\RentController.cs" />
+    <Compile Include="Controller\VehicleController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\SecurityHelper.cs" />
   </ItemGroup>

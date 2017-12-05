@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,6 +21,12 @@ namespace VRS.Logic.Controller
                 return client;
             }
             return null;
+        }
+
+        public IEnumerable<Client> GetAll()
+        {
+            var result = repo.GetAll();
+            return result;
         }
     }
 }

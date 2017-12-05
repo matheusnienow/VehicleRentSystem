@@ -11,14 +11,14 @@ namespace VRS.Repository.DTO
     public class UserDTO
     {
 
-        public UserDTO(int id, string login, byte[] salt, byte[] hash, int roleId, RoleDTO role)
+        public UserDTO(int id, string login, byte[] salt, byte[] hash, int roleId/*, RoleDTO role*/)
         {
             Id = id;
             Login = login;
             Salt = salt;
             Hash = hash;
             RoleId = roleId;
-            Role = role;
+            //Role = role;
         }
 
         [DataMember]
@@ -36,7 +36,7 @@ namespace VRS.Repository.DTO
         [DataMember]
         public int? RoleId { get; set; }
 
-        [DataMember]
-        public RoleDTO Role { get; set; }
+        /*[DataMember]
+        public RoleDTO Role { get; set; }*/
     }
 }

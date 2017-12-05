@@ -17,9 +17,15 @@ namespace VRS.WebApi
         UserDTO VerifyUser(string username, string password);
 
         [OperationContract]
-        List<RentDTO> GetRents();
+        IEnumerable<RentDTO> GetRents();
 
         [OperationContract]
-        List<UserDTO> GetUsers();
+        IEnumerable<UserDTO> GetUsers();
+
+        [OperationContract]
+        IEnumerable<ClientDTO> GetClients();
+
+        [OperationContract]
+        IEnumerable<VehicleDTO> GetVehicles();
     }
 }

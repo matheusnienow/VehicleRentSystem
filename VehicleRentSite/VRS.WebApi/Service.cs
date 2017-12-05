@@ -13,16 +13,18 @@ namespace VRS.WebApi
     // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "Service1" in both code and config file together.
     public class Service : IService
     {
-        public List<RentDTO> GetRents()
+        public IEnumerable<RentDTO> GetRents()
         {
             var rentController = new RentController();
-            return rentController.GetAllWithVehicleAndClient().ToList().Select(x => x.ToDto()).ToList();
+            return rentController.GetAllWithVehicleAndClient().Select(x => x.ToDto());
         }
 
-        public List<UserDTO> GetUsers()
+        public IEnumerable<UserDTO> GetUsers()
         {
             var userController = new UserController();
-            return userController.GetAll().Select(u => u.ToDto()).ToList();
+            var users = userController.GetAll().ToList();
+            var result = users.Select(u => u.ToDto());
+            return result;
         }
 
         public UserDTO VerifyUser(string username, string password)
@@ -30,6 +32,17 @@ namespace VRS.WebApi
             var loginController = new UserController();
             User user = loginController.VerifyUser(username, password);
             return user.ToDto();
+        }
+        public IEnumerable<ClientDTO> GetClients()
+        {
+            var clientController = new ClientController();
+            return clientController.GetAll().Select(x => x.ToDto());
+        }
+
+        public IEnumerable<VehicleDTO> GetVehicles()
+        {
+            var vehicleController = new VehicleController();
+            return vehicleController.GetAll().Select(x => x.ToDto());
         }
     }
 }
