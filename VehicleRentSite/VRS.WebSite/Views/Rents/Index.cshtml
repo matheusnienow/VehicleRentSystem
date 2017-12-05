@@ -24,6 +24,9 @@
         <th>
             @Html.DisplayNameFor(model => model.Price)
         </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Finished)
+        </th>
         <th></th>
     </tr>
 
@@ -40,6 +43,9 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Price) EUR
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Finished)
         </td>
     </tr>
 }

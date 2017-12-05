@@ -33,6 +33,9 @@ namespace VRS.Model
         public double? Price { get; set; }
 
         [DataMember]
+        public bool Finished { get; set; }
+
+        [DataMember]
         public virtual Client Client { get; set; }
 
         [DataMember]
@@ -48,6 +51,7 @@ namespace VRS.Model
                 FinishDate = FinishDate,
                 ClientId = ClientId,
                 VehicleId = VehicleId,
+                Finished = Finished,
                 Client = Client.ToDto(),
                 Vehicle = Vehicle.ToDto()
             };

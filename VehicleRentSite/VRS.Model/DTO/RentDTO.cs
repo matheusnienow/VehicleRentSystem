@@ -30,6 +30,9 @@ namespace VRS.Repository.DTO
         public double? Price { get; set; }
 
         [DataMember]
+        public bool Finished { get; set; }
+
+        [DataMember]
         public ClientDTO Client { get; set; }
 
         [DataMember]

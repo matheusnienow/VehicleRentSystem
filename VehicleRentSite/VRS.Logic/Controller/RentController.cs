@@ -39,6 +39,7 @@ namespace VRS.Logic.Controller
             var price = 100 * period.Days;
             rent.Price = price;
             rent.ClientId = client.Id;
+            rent.Finished = false;
             var result = repo.Insert(rent);
             if (result > 0)
             {
@@ -49,6 +50,16 @@ namespace VRS.Logic.Controller
                 return rent;
             }
             return null;
+        }
+
+        public bool FinishRent(int id)
+        {
+            var rent = repo.GetById(id);
+            rent.Finished = true;
+            rent.Vehicle.InUse = false;
+            var result = repo.Update(rent);
+
+            return result > 0;
         }
     }
 }

@@ -44,5 +44,22 @@ namespace VRS.WebApi
             var vehicleController = new VehicleController();
             return vehicleController.GetAll().Select(x => x.ToDto());
         }
+
+        public Result FinishRent(int id)
+        {
+            try { 
+                var rentController = new RentController();
+                bool success = rentController.FinishRent(id);
+                if (success)
+                {
+                    return new Result(true, "Success");
+                }
+                return new Result(false, "An error ocurred");
+            } 
+            catch (Exception e)
+            {
+                return new Result(false, e.Message);
+            }
+        }
     }
 }

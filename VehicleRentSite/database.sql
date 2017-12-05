@@ -80,6 +80,7 @@ CREATE TABLE [Rent] (
 	[StartDate] DATE,
 	[FinishDate] DATE NULL,
 	[Price] FLOAT,
+	[Finished] BIT NOT NULL,
     FOREIGN KEY ([ClientId]) REFERENCES [Client](Id),
     FOREIGN KEY ([VehicleId]) REFERENCES [Vehicle](Id)
 );

@@ -27,5 +27,8 @@ namespace VRS.WebApi
 
         [OperationContract]
         IEnumerable<VehicleDTO> GetVehicles();
+
+        [OperationContract]
+        Result FinishRent(int id);
     }
 }
