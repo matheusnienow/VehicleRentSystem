@@ -57,5 +57,20 @@ namespace VRS.Model
             };
             return dto;
         }
+
+        public static Rent FromDTO(RentDTO dto)
+        {
+            var rent = new Rent
+            {
+                Id = dto.Id,
+                Price = dto.Price,
+                StartDate = dto.StartDate,
+                FinishDate = dto.FinishDate,
+                ClientId = dto.ClientId,
+                VehicleId = dto.VehicleId,
+                Finished = dto.Finished
+            };
+            return rent;
+        }
     }
 }

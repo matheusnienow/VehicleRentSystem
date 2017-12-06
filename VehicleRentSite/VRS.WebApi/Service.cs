@@ -61,5 +61,23 @@ namespace VRS.WebApi
                 return new Result(false, e.Message);
             }
         }
+
+        public IEnumerable<ClientDTO> GetClientsForName(string clientName)
+        {
+            var clientController = new ClientController();
+            IEnumerable<Client> clients = clientController.GetForName(clientName);
+            return clients.Select(c => c.ToDto());
+        }
+
+        public Result CreateRent(RentDTO rentDTO)
+        {
+            var rentController = new RentController();
+            var rent = rentController.CreateRent(Rent.FromDTO(rentDTO));
+            if (rent == null)
+            {
+                return new Result(false, "It was not possible to create the rent.");
+            }
+            return new Result(true, "Success");
+        }
     }
 }

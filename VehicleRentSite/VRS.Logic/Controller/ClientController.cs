@@ -28,5 +28,11 @@ namespace VRS.Logic.Controller
             var result = repo.GetAll();
             return result;
         }
+
+        public IEnumerable<Client> GetForName(string clientName)
+        {
+            var clients = repo.GetAll().Where(c => c.Name.Contains(clientName));
+            return clients;
+        }
     }
 }

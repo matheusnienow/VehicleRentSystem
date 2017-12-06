@@ -52,6 +52,25 @@ namespace VRS.Logic.Controller
             return null;
         }
 
+        public Rent CreateRent(Rent rent)
+        {
+            var vehicleRepo = Repository<Vehicle>.NewInstance();
+            var vehicle = vehicleRepo.GetById(rent.VehicleId);
+            if (vehicle.InUse)
+            {
+                return null;
+            }
+
+            var result = repo.Insert(rent);
+            if (result > 0)
+            {
+                vehicle.InUse = true;
+                var updateResult = vehicleRepo.Update(vehicle);
+                return rent;
+            }
+            return null;
+        }
+
         public bool FinishRent(int id)
         {
             var rent = repo.GetById(id);

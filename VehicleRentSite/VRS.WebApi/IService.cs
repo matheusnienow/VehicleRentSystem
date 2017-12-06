@@ -26,9 +26,15 @@ namespace VRS.WebApi
         IEnumerable<ClientDTO> GetClients();
 
         [OperationContract]
+        IEnumerable<ClientDTO> GetClientsForName(string clientName);
+
+        [OperationContract]
         IEnumerable<VehicleDTO> GetVehicles();
 
         [OperationContract]
         Result FinishRent(int id);
+
+        [OperationContract]
+        Result CreateRent(RentDTO rent);
     }
 }
